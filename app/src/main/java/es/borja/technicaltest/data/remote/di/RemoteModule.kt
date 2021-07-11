@@ -1,6 +1,5 @@
 package es.borja.technicaltest.data.remote.di
 
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

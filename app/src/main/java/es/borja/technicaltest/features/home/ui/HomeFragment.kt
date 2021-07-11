@@ -5,14 +5,12 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import es.borja.technicaltest.R
 import es.borja.technicaltest.databinding.FragmentHomeBinding
 import es.borja.technicaltest.extensions.showIf
 import es.borja.technicaltest.extensions.visibleIf
@@ -34,14 +32,15 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater,container,false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerPhotos.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerPhotos.adapter = PhotosAdapter(mutableListOf()){
+        binding.recyclerPhotos.adapter = PhotosAdapter(mutableListOf()) {
+            navigateToDetail(it.id, it.secret, it.thumbnail)
         }
 
         viewmodel.state.onEach {
@@ -49,7 +48,7 @@ class HomeFragment : Fragment() {
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         binding.btnSearch.setOnClickListener {
-            if(!binding.search.text.isNullOrEmpty()){
+            if (!binding.search.text.isNullOrEmpty()) {
                 viewmodel.searchPhotos(binding.search.text.toString())
             }
         }
@@ -74,16 +73,17 @@ class HomeFragment : Fragment() {
         binding.recyclerPhotos.layoutManager?.onRestoreInstanceState(recyclerViewState)
 
     }
+
     private fun handleError(message: Int) {
         binding.textError.text = getString(message)
     }
+
     private fun handleEmpty(message: Int) {
         binding.textError.text = getString(message)
     }
 
-
-    private fun navigateToDetail(){
-        val action = HomeFragmentDirections.homeFragmentToDetail("","")
+    private fun navigateToDetail(photoId: String, secret: String, url: String) {
+        val action = HomeFragmentDirections.homeFragmentToDetail(photoId, secret, url)
         findNavController().navigate(action)
     }
 }

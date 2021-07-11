@@ -25,6 +25,9 @@
         <argument
             android:name="secret"
             app:argType="string"/>
+        <argument
+            android:name="thumbnail"
+            app:argType="string"/>
     </fragment>
 
 </navigation>
